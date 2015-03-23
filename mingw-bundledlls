@@ -1,0 +1,126 @@
+#!/usr/bin/python3
+
+# The MIT License (MIT)
+#
+# Copyright (c) 2015 Martin Preisler
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+
+import subprocess
+import os.path
+import argparse
+import shutil
+
+# The mingw path matches where Fedora 21 installs mingw32
+default_path_prefixes = [
+    "", "/usr/i686-w64-mingw32/sys-root/mingw/bin"
+]
+
+# This blacklist may need extending
+blacklist = [
+    "advapi32.dll", "kernel32.dll", "msvcrt.dll", "ole32.dll", "user32.dll",
+    "ws2_32.dll", "comdlg32.dll", "gdi32.dll", "imm32.dll", "oleaut32.dll",
+    "shell32.dll", "winmm.dll", "winspool.drv", "wldap32.dll"
+]
+
+
+def find_full_path(filename, path_prefixes):
+    path = None
+
+    for path_prefix in path_prefixes:
+        path_candidate = os.path.join(path_prefix, filename)
+
+        if os.path.exists(path_candidate):
+            path = path_candidate
+            break
+
+    if path is None:
+        raise RuntimeError(
+            "Can't find " + filename + ". If it is an inbuilt Windows DLL, "
+            "please add it to the blacklist variable in the script and send "
+            "a pull request!"
+        )
+
+    return path
+
+
+def gather_deps(path, path_prefixes):
+    ret = [path]
+    output = str(subprocess.check_output(["objdump", "-p", path]), 'utf-8').split("\n")
+    for line in output:
+        if not line.startswith("\tDLL Name: "):
+            continue
+
+        dep = line.split("DLL Name: ")[1]
+
+        if dep.lower() in blacklist:
+            continue
+
+        dep_path = find_full_path(dep, path_prefixes)
+        subdeps = gather_deps(dep_path, path_prefixes)
+        ret.extend(subdeps)
+
+    return ret
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "exe_file",
+        help="EXE of DLL file that you need to bundle dependencies for"
+    )
+    parser.add_argument(
+        "--copy",
+        action="store_true",
+        help="In addition to printing out the dependencies, also copy them next to the exe_file"
+    )
+    parser.add_argument(
+        "--upx",
+        action="store_true",
+        help="Only valid if --copy is provided. Run UPX on all the DLLs and EXE."
+    )
+    args = parser.parse_args()
+
+    if args.upx and not args.copy:
+        raise RuntimeError("Can't run UPX if --copy hasn't been provided.")
+
+    all_deps = set(gather_deps(args.exe_file, default_path_prefixes))
+    all_deps.remove(args.exe_file)
+
+    print("Found the following dependencies:\n")
+    print("\n".join(all_deps))
+    print("\n")
+
+    if args.copy:
+        print("Copying enabled, will now copy all dependencies next to the exe_file.\n")
+
+        parent_dir = os.path.dirname(args.exe_file)
+
+        for dep in all_deps:
+            target = os.path.join(parent_dir, os.path.basename(dep))
+            print("Copying '%s' to '%s'" % (dep, target))
+            shutil.copy(dep, parent_dir)
+
+            if args.upx:
+                subprocess.call(["upx", target])
+
+
+if __name__ == "__main__":
+    main()
