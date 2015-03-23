@@ -84,7 +84,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "exe_file",
-        help="EXE of DLL file that you need to bundle dependencies for"
+        help="EXE or DLL file that you need to bundle dependencies for"
     )
     parser.add_argument(
         "--copy",
