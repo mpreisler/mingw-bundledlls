@@ -30,14 +30,14 @@ import shutil
 
 # The mingw path matches where Fedora 21 installs mingw32
 default_path_prefixes = [
-    "", "/usr/i686-w64-mingw32/sys-root/mingw/bin"
+    "", "/usr/bin", "/usr/i686-w64-mingw32/sys-root/mingw/bin"
 ]
 
 # This blacklist may need extending
 blacklist = [
     "advapi32.dll", "kernel32.dll", "msvcrt.dll", "ole32.dll", "user32.dll",
     "ws2_32.dll", "comdlg32.dll", "gdi32.dll", "imm32.dll", "oleaut32.dll",
-    "shell32.dll", "winmm.dll", "winspool.drv", "wldap32.dll"
+    "shell32.dll", "winmm.dll", "winspool.drv", "wldap32.dll", "ntdll.dll"
 ]
 
 
@@ -111,7 +111,7 @@ def main():
     if args.copy:
         print("Copying enabled, will now copy all dependencies next to the exe_file.\n")
 
-        parent_dir = os.path.dirname(args.exe_file)
+        parent_dir = os.path.dirname(args.exe_file) or "./"
 
         for dep in all_deps:
             target = os.path.join(parent_dir, os.path.basename(dep))
