@@ -30,7 +30,7 @@ import shutil
 
 # The mingw path matches where Fedora 21 installs mingw32
 default_path_prefixes = [
-    "", "/usr/i686-w64-mingw32/sys-root/mingw/bin"
+    "", "/usr/bin", "/usr/i686-w64-mingw32/sys-root/mingw/bin"
 ]
 
 # This blacklist may need extending
