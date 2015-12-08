@@ -30,7 +30,7 @@ import shutil
 
 # The mingw path matches where Fedora 21 installs mingw32
 default_path_prefixes = [
-    "", "/usr/bin", "/usr/i686-w64-mingw32/sys-root/mingw/bin"
+    "", "/usr/bin", "/usr/i686-w64-mingw32/sys-root/mingw/bin", "/mingw64/bin",
 ]
 
 # This blacklist may need extending
@@ -69,7 +69,7 @@ def gather_deps(path, path_prefixes):
         if not line.startswith("\tDLL Name: "):
             continue
 
-        dep = line.split("DLL Name: ")[1]
+        dep = line.split("DLL Name: ")[1].strip()
 
         if dep.lower() in blacklist:
             continue
