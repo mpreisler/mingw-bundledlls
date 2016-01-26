@@ -38,7 +38,8 @@ blacklist = [
     "advapi32.dll", "kernel32.dll", "msvcrt.dll", "ole32.dll", "user32.dll",
     "ws2_32.dll", "comdlg32.dll", "gdi32.dll", "imm32.dll", "oleaut32.dll",
     "shell32.dll", "winmm.dll", "winspool.drv", "wldap32.dll",
-    "ntdll.dll"
+    "ntdll.dll", "d3d9.dll", "mpr.dll", "crypt32.dll", "dnsapi.dll",
+    "shlwapi.dll", "version.dll", "iphlpapi.dll",
 ]
 
 
@@ -62,20 +63,25 @@ def find_full_path(filename, path_prefixes):
     return path
 
 
-def gather_deps(path, path_prefixes):
+def gather_deps(path, path_prefixes, seen):
     ret = [path]
-    output = str(subprocess.check_output(["objdump", "-p", path]), 'utf-8').split("\n")
+    output = subprocess.check_output(["objdump", "-p", path]).decode('utf-8').split("\n")
     for line in output:
         if not line.startswith("\tDLL Name: "):
             continue
 
         dep = line.split("DLL Name: ")[1].strip()
+        ldep = dep.lower()
 
-        if dep.lower() in blacklist:
+        if ldep in blacklist:
+            continue
+
+        if ldep in seen:
             continue
 
         dep_path = find_full_path(dep, path_prefixes)
-        subdeps = gather_deps(dep_path, path_prefixes)
+        seen.extend([ldep])
+        subdeps = gather_deps(dep_path, path_prefixes, seen)
         ret.extend(subdeps)
 
     return ret
@@ -102,12 +108,10 @@ def main():
     if args.upx and not args.copy:
         raise RuntimeError("Can't run UPX if --copy hasn't been provided.")
 
-    all_deps = set(gather_deps(args.exe_file, default_path_prefixes))
+    all_deps = set(gather_deps(args.exe_file, default_path_prefixes, []))
     all_deps.remove(args.exe_file)
 
-    print("Found the following dependencies:\n")
     print("\n".join(all_deps))
-    print("\n")
 
     if args.copy:
         print("Copying enabled, will now copy all dependencies next to the exe_file.\n")
