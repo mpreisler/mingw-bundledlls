@@ -110,9 +110,7 @@ def main():
     all_deps = set(gather_deps(args.exe_file, default_path_prefixes, []))
     all_deps.remove(args.exe_file)
 
-    print("Found the following dependencies:\n")
     print("\n".join(all_deps))
-    print("\n")
 
     if args.copy:
         print("Copying enabled, will now copy all dependencies next to the exe_file.\n")

@@ -31,8 +31,6 @@ optional arguments:
 ## Example
 ```
 $ ./mingw-bundledlls --copy ./scap-workbench/scap-workbench.exe 
-Found the following dependencies:
-
 /usr/i686-w64-mingw32/sys-root/mingw/bin/libssh2-1.dll
 /usr/i686-w64-mingw32/sys-root/mingw/bin/QtNetwork4.dll
 /usr/i686-w64-mingw32/sys-root/mingw/bin/libcrypto-10.dll
@@ -54,7 +52,6 @@ Found the following dependencies:
 /usr/i686-w64-mingw32/sys-root/mingw/bin/libgcc_s_sjlj-1.dll
 /usr/i686-w64-mingw32/sys-root/mingw/bin/libexslt-0.dll
 /usr/i686-w64-mingw32/sys-root/mingw/bin/zlib1.dll
-
 
 Copying enabled, will now copy all dependencies next to the exe_file.
 
