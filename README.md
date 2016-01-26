@@ -8,7 +8,7 @@ A convenient Python3 script that copies all dependency DLLs next to the executab
   - (optional) run UPX on all the copied dependencies and the EXE
 
 ## Requirements
-  - python3
+  - python3 or python2
   - objdump in $PATH
   - (optional) upx in $PATH
 
