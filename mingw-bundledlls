@@ -121,8 +121,14 @@ def main():
 
         for dep in all_deps:
             target = os.path.join(parent_dir, os.path.basename(dep))
-            print("Copying '%s' to '%s'" % (dep, target))
-            shutil.copy(dep, parent_dir)
+
+            try:
+                print("Copying '%s' to '%s'" % (dep, target))
+                shutil.copy(dep, parent_dir)
+
+            except shutil.SameFileError:
+                print("Dependency '%s' was already in target directory, "
+                      "skipping..." % (dep))
 
             if args.upx:
                 subprocess.call(["upx", target])
