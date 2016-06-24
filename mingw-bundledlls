@@ -65,7 +65,8 @@ def find_full_path(filename, path_prefixes):
 
 def gather_deps(path, path_prefixes, seen):
     ret = [path]
-    output = subprocess.check_output(["objdump", "-p", path]).decode('utf-8').split("\n")
+    output = subprocess.check_output(["objdump", "-p", path]).decode(
+        "utf-8", "replace").split("\n")
     for line in output:
         if not line.startswith("\tDLL Name: "):
             continue
