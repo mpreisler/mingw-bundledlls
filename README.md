@@ -12,6 +12,9 @@ A convenient Python3 script that copies all dependency DLLs next to the executab
   - objdump in $PATH
   - (optional) upx in $PATH
 
+## Environment Variables
+  - `$MINGW_BUNDLEDLLS_SEARCH_PATH`: Colon-separated list of paths to search for DLLs
+
 ## Usage
 
 ```
