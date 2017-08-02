@@ -31,7 +31,7 @@ import shutil
 # The mingw path matches where Fedora 21 installs mingw32; this is the default
 # fallback if no other search path is specified in $MINGW_BUNDLEDLLS_SEARCH_PATH
 DEFAULT_PATH_PREFIXES = [
-    "", "/usr/bin", "/usr/i686-w64-mingw32/sys-root/mingw/bin", "/mingw64/bin",
+    "", "/usr/bin", "/usr/i686-w64-mingw32/sys-root/mingw/bin", "/mingw64/bin", "C:\\msys64\\mingw64\\bin",
 ]
 
 env_path_prefixes = os.environ.get('MINGW_BUNDLEDLLS_SEARCH_PATH', None)
@@ -47,7 +47,7 @@ blacklist = [
     "shell32.dll", "winmm.dll", "winspool.drv", "wldap32.dll",
     "ntdll.dll", "d3d9.dll", "mpr.dll", "crypt32.dll", "dnsapi.dll",
     "shlwapi.dll", "version.dll", "iphlpapi.dll", "msimg32.dll", "setupapi.dll",
-    "opengl32.dll", "dwmapi.dll", "uxtheme.dll"
+    "opengl32.dll", "dwmapi.dll", "uxtheme.dll", "secur32.dll"
 ]
 
 
