@@ -53,23 +53,17 @@ blacklist = [
 
 
 def find_full_path(filename, path_prefixes):
-    path = None
-
     for path_prefix in path_prefixes:
-        path_candidate = os.path.join(path_prefix, filename)
+        path = os.path.join(path_prefix, filename)
+        if os.path.exists(path):
+            return path
 
-        if os.path.exists(path_candidate):
-            path = path_candidate
-            break
-
-    if path is None:
+    else:
         raise RuntimeError(
             "Can't find " + filename + ". If it is an inbuilt Windows DLL, "
             "please add it to the blacklist variable in the script and send "
             "a pull request!"
         )
-
-    return path
 
 
 def gather_deps(path, path_prefixes, seen):
