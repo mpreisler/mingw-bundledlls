@@ -50,7 +50,8 @@ blacklist = [
     "ntdll.dll", "d3d9.dll", "mpr.dll", "crypt32.dll", "dnsapi.dll",
     "shlwapi.dll", "version.dll", "iphlpapi.dll", "msimg32.dll", "setupapi.dll",
     "opengl32.dll", "dwmapi.dll", "uxtheme.dll", "secur32.dll", "gdiplus.dll",
-    "usp10.dll", "comctl32.dll", "wsock32.dll"
+    "usp10.dll", "comctl32.dll", "wsock32.dll", "netapi32.dll", "userenv.dll",
+    "avicap32.dll", "avrt.dll"
 ]
 
 
