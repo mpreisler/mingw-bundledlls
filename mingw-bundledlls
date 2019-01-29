@@ -58,8 +58,11 @@ blacklist = [
 def find_full_path(filename, path_prefixes):
     for path_prefix in path_prefixes:
         path = os.path.join(path_prefix, filename)
+        path_low = os.path.join(path_prefix, filename.lower())
         if os.path.exists(path):
             return path
+        if os.path.exists(path_low):
+            return path_low
 
     else:
         raise RuntimeError(
