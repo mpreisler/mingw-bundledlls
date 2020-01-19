@@ -33,7 +33,7 @@ import shutil
 DEFAULT_PATH_PREFIXES = [
     "", "/usr/bin", "/usr/i686-w64-mingw32/sys-root/mingw/bin", "/mingw64/bin",
     "/usr/i686-w64-mingw32/sys-root/mingw/lib",
-    "C:\\msys64\\mingw64\\bin"
+    "C:\\msys64\\mingw64\\bin", "D:\\msys64\\mingw64\\bin"
 ]
 
 env_path_prefixes = os.environ.get('MINGW_BUNDLEDLLS_SEARCH_PATH', None)
