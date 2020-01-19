@@ -51,7 +51,8 @@ blacklist = [
     "shlwapi.dll", "version.dll", "iphlpapi.dll", "msimg32.dll", "setupapi.dll",
     "opengl32.dll", "dwmapi.dll", "uxtheme.dll", "secur32.dll", "gdiplus.dll",
     "usp10.dll", "comctl32.dll", "wsock32.dll", "netapi32.dll", "userenv.dll",
-    "avicap32.dll", "avrt.dll", "psapi.dll", "mswsock.dll", "glu32.dll", "rpcrt4.dll"
+    "avicap32.dll", "avrt.dll", "psapi.dll", "mswsock.dll", "glu32.dll", "rpcrt4.dll",
+    ""
 ]
 
 
@@ -82,6 +83,12 @@ def gather_deps(path, path_prefixes, seen):
 
         dep = line.split("DLL Name: ")[1].strip()
         ldep = dep.lower()
+
+        if dep[:3] == "Qt4":
+            continue
+
+        if dep[:3] == "Qt5":
+            continue
 
         if ldep in blacklist:
             continue
